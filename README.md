@@ -1,88 +1,77 @@
-# Controlled Goal-Driven Codex Skill
+<div align="center">
 
-A controlled Codex skill inspired by Li Dang's goal-driven agent workflow.
+# 🎯 Controlled Goal-Driven Codex Skill
 
-This project is based on the idea introduced in the original repository:
+**A practical, bounded, and validation-first Codex skill for complex engineering tasks.**
 
-- Original GitHub repository: [lidangzzz/goal-driven](https://github.com/lidangzzz/goal-driven)
-- Author on X: [@lidangzzz](https://x.com/lidangzzz)
+[中文说明 🇨🇳](./README.zh-CN.md) · [Original Inspiration](https://github.com/lidangzzz/goal-driven)
 
-This repository is not intended to be a magic prompt or an infinite agent loop. It is a practical rewrite of the goal-driven workflow idea for Codex, with explicit budgets, validation commands, stop conditions, and safer defaults.
+</div>
 
-## What this is
+---
 
-This is a Codex skill for complex coding tasks where progress can be objectively measured.
+## ✨ What is this?
 
-It is designed for tasks such as:
+This repository provides a **controlled goal-driven skill** for Codex.
 
-- test-driven bug fixing
-- compiler or interpreter experiments
-- large refactors
-- migration tasks
-- benchmark-driven optimization
-- generated test suite validation
-- repeated validation against a known expected output
+It is designed for tasks where progress can be measured objectively, such as:
 
-The core idea is simple:
+- 🐞 test-driven bug fixing
+- 🔧 large refactors
+- 🚚 migration tasks
+- ⚡ benchmark-driven optimization
+- 🧪 generated test-suite validation
+- 📦 repeated checks against known expected outputs
 
-> A coding agent should not just “try harder”. It should work toward a clearly defined goal, check measurable success criteria, and stop when further progress is no longer justified.
+Core idea:
 
-## Origin and motivation
+> Don’t just “try harder”. Work toward a clear goal, validate results, and stop when further attempts are not justified.
 
-The original goal-driven prompt pattern by [@lidangzzz](https://x.com/lidangzzz) emphasizes persistent agent work until success criteria are met.
+---
 
-This project keeps the useful part of that idea:
+## 🧭 Why this version exists
 
-- define a concrete goal
-- define success criteria
-- let the agent iterate toward the goal
-- validate progress repeatedly
+The workflow is inspired by Li Dang’s goal-driven pattern, but this project focuses on **safe and auditable execution** in Codex.
 
-But this version adds stricter practical constraints for Codex usage:
+Compared with open-ended looping prompts, this skill adds:
 
-- explicit iteration limits
-- validation commands
-- stop conditions
-- no infinite loops
-- no automatic activation
-- clear final reporting
-- conservative defaults when the user does not specify a budget
+- 🔢 explicit iteration budgets
+- ✅ mandatory validation commands
+- 🛑 clear stop conditions
+- 🧱 strict scope awareness
+- 🧾 concise final reporting
+- 🐢 conservative defaults when user constraints are missing
 
-The purpose is to make goal-driven agent work more usable, auditable, and less wasteful.
+---
 
-## Why not run indefinitely?
+## 🚫 Why not run forever?
 
-Long-running agent workflows can be useful, but only when the task has objective validation.
+Long-running workflows only make sense if success can be validated.
 
-For example, a long-running workflow makes sense when the agent can repeatedly run:
+Good examples:
 
-```text
+```bash
 npm test
-cargo test
 pytest
+cargo test
 make test
 go test ./...
 ```
 
-or compare generated outputs against a known reference.
-
-It is not useful when the goal is vague, such as:
+Bad examples:
 
 ```text
 Make this project better.
-Improve the codebase.
-Keep optimizing until it is good.
+Keep optimizing until it feels good.
 ```
 
-In those cases, the skill should produce a plan and stop instead of burning tokens.
+If the goal is vague, the skill should **plan and stop**, rather than burn tokens indefinitely.
 
-## Usage
+---
 
-Install the `skill` folder as a Codex skill.
+## 🚀 Usage
 
-Invoke it explicitly only when needed.
-
-Example prompt:
+Install the `skill/` directory as a Codex skill and invoke it explicitly.
 
 ```text
 $controlled-goal-driven
@@ -97,21 +86,9 @@ Success criteria:
 - stop if the same error repeats twice
 ```
 
-## Design principles
+---
 
-This skill follows several rules:
-
-1. Do not run indefinitely.
-2. Do not claim success without validation.
-3. Do not broaden the task without permission.
-4. Do not rewrite unrelated files.
-5. Do not create subagents unless they are useful for bounded investigation.
-6. Stop when the same failure repeats.
-7. Prefer a clear failure report over fake progress.
-
-## Recommended task format
-
-When using this skill, provide:
+## 🧩 Recommended input format
 
 ```text
 Goal:
@@ -133,36 +110,9 @@ Stop conditions:
 When Codex should stop and report instead of continuing.
 ```
 
-## Example
+---
 
-```text
-$controlled-goal-driven
-
-Goal:
-Fix the TypeScript parser so it correctly handles optional chaining.
-
-Success criteria:
-- npm test passes
-- new tests cover optional chaining
-- no unrelated formatter changes
-- maximum 4 iterations
-
-Validation:
-npm test
-
-Scope:
-src/parser/
-tests/parser/
-
-Stop conditions:
-- stop if the same parser error repeats twice
-- stop if the required behavior is unclear
-- stop if tests cannot be run locally
-```
-
-## Final report format
-
-At the end of a run, Codex should report:
+## 📋 Final report should include
 
 - Goal
 - Changes made
@@ -170,11 +120,13 @@ At the end of a run, Codex should report:
 - Remaining issues
 - Recommended next action
 
-## Acknowledgement
+---
 
-This project is inspired by Li Dang's original goal-driven workflow:
+## 🙏 Acknowledgement
+
+Inspired by Li Dang’s original goal-driven workflow:
 
 - GitHub: [lidangzzz/goal-driven](https://github.com/lidangzzz/goal-driven)
 - X: [@lidangzzz](https://x.com/lidangzzz)
 
-This version is an independent, controlled adaptation focused on safer and more bounded Codex usage.
+This repository is an independent, controlled adaptation for safer Codex usage.
