@@ -31,7 +31,7 @@ Core idea:
 
 ## 🧭 Why this version exists
 
-The workflow is inspired by Li Dang’s goal-driven pattern, but this project focuses on **safe and auditable execution** in Codex.
+This workflow is inspired by [Li Dang (@lidangzzz)](https://x.com/lidangzzz)'s [goal-driven](https://github.com/lidangzzz/goal-driven) pattern, but this project focuses more on **safety, controllability, and auditable execution** in Codex.
 
 Compared with open-ended looping prompts, this skill adds:
 
