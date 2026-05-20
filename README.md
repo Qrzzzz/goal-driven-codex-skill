@@ -1,77 +1,58 @@
 <div align="center">
 
-# 🎯 Controlled Goal-Driven Codex Skill
+# Controlled Goal-Driven Codex Skill
 
-**A practical, bounded, and validation-first Codex skill for complex engineering tasks.**
+**A practical, bounded, validation-first Codex skill for complex engineering tasks.**
 
-[中文说明 🇨🇳](./README.zh-CN.md) · [Original Inspiration](https://github.com/lidangzzz/goal-driven)
+[Chinese README](./README.zh-CN.md) · [Original Inspiration](https://github.com/lidangzzz/goal-driven)
 
 </div>
 
 ---
 
-## ✨ What is this?
+## Overview
 
-This repository provides a **controlled goal-driven skill** for Codex.
+![Controlled Goal-Driven Codex Skill overview](./assets/overview-en.png)
 
-It is designed for tasks where progress can be measured objectively, such as:
+This repository packages a controlled goal-driven workflow as a small Codex skill project. It is meant for tasks where progress can be validated, iteration is useful, and stopping conditions matter.
 
-- 🐞 test-driven bug fixing
-- 🔧 large refactors
-- 🚚 migration tasks
-- ⚡ benchmark-driven optimization
-- 🧪 generated test-suite validation
-- 📦 repeated checks against known expected outputs
+## What is this?
 
-💡 Core idea:
+This skill converts a broad engineering request into a bounded loop:
 
-> Don’t just “try harder”. Work toward a clear goal, validate results, and stop when further attempts are not justified.
+1. clarify the goal
+2. define success criteria
+3. stay inside the allowed editing scope
+4. run validation commands
+5. iterate only while progress is measurable
+6. stop with a concise final report
 
----
+Core idea:
 
-## 🧭 Why this version exists
+> Do not just try harder. Work toward a clear goal, validate results, and stop when further attempts are not justified.
 
-The workflow is inspired by Li Dang’s goal-driven pattern, but this project focuses on **safe and auditable execution** in Codex.
+## Installation
 
-Compared with open-ended looping prompts, this skill adds:
-
-- 🔢 explicit iteration budgets
-- ✅ mandatory validation commands
-- 🛑 clear stop conditions
-- 🧱 strict scope awareness
-- 🧾 concise final reporting
-- 🐢 conservative defaults when user constraints are missing
-
----
-
-## 🚫 Why not run forever?
-
-Long-running workflows only make sense if success can be validated.
-
-✅ Good examples:
-
-```bash
-npm test
-pytest
-cargo test
-make test
-go test ./...
-```
-
-❌ Bad examples:
+Copy the `skill/` directory into your Codex skills folder. For example:
 
 ```text
-Make this project better.
-Keep optimizing until it feels good.
+~/.agents/skills/controlled-goal-driven/
 ```
 
-If the goal is vague, the skill should **plan and stop**, rather than burn tokens indefinitely.
+The final structure should be:
 
----
+```text
+~/.agents/skills/controlled-goal-driven/SKILL.md
+~/.agents/skills/controlled-goal-driven/agents/openai.yaml
+```
 
-## 🚀 Usage
+Implicit invocation is disabled by design. Invoke the skill explicitly:
 
-🛠️ Install the `skill/` directory as a Codex skill and invoke it explicitly.
+```text
+$controlled-goal-driven
+```
+
+## Usage
 
 ```text
 $controlled-goal-driven
@@ -86,9 +67,21 @@ Success criteria:
 - stop if the same error repeats twice
 ```
 
----
+## When to use / When not to use
 
-## 🧩 Recommended input format
+Use this skill when:
+
+- the task has objective success criteria
+- validation commands exist
+- the allowed editing scope is clear
+- repeated iterations can improve the result
+
+Do not use this skill when:
+
+- the goal is vague
+- success is based only on taste or vibes
+- there is no validation command
+- the user only needs a simple one-shot answer
 
 ## Why this version exists
 
@@ -117,21 +110,54 @@ make test
 go test ./...
 ```
 
----
+Bad examples:
 
-## 📋 Final report should include
+```text
+Make this project better.
+Keep optimizing until it feels good.
+```
 
-- 🎯 Goal
-- 🛠️ Changes made
-- ✅ Validation results
-- ⚠️ Remaining issues
-- 👉 Recommended next action
+If the goal is vague, the skill should plan and stop rather than consume tokens indefinitely.
 
----
+## Recommended input format
 
-## 🙏 Acknowledgement
+```text
+Goal:
+The concrete thing Codex should accomplish.
 
-✨ Inspired by Li Dang’s original goal-driven workflow:
+Success criteria:
+How to know the task is complete.
+
+Validation:
+Commands Codex should run to verify progress.
+
+Scope:
+Files or directories Codex may edit.
+
+Budget:
+Maximum number of iterations or attempts.
+
+Stop conditions:
+When Codex should stop and report instead of continuing.
+```
+
+## Examples
+
+- [Test-driven bug fix](./examples/test-driven-bugfix.md)
+- [Refactor with scope](./examples/refactor-with-scope.md)
+- [Generated test validation](./examples/generated-test-validation.md)
+
+## Final report should include
+
+- Goal
+- Changes made
+- Validation results
+- Remaining issues
+- Recommended next action
+
+## Acknowledgement
+
+Inspired by Li Dang's original goal-driven workflow:
 
 - GitHub: [lidangzzz/goal-driven](https://github.com/lidangzzz/goal-driven)
 - X: [@lidangzzz](https://x.com/lidangzzz)
