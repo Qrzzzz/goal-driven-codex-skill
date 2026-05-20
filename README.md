@@ -10,13 +10,13 @@
 
 ---
 
-## Overview
+## 🌟 Overview
 
 ![Controlled Goal-Driven Codex Skill overview](./assets/overview-en.png)
 
 This repository packages a controlled goal-driven workflow as a small Codex skill project. It is meant for tasks where progress can be validated, iteration is useful, and stopping conditions matter.
 
-## What is this?
+## 🤔 What is this?
 
 This skill converts a broad engineering request into a bounded loop:
 
@@ -31,7 +31,7 @@ Core idea:
 
 > Do not just try harder. Work toward a clear goal, validate results, and stop when further attempts are not justified.
 
-## Installation
+## 🛠️ Installation
 
 Copy the `skill/` directory into your Codex skills folder. For example:
 
@@ -52,7 +52,7 @@ Implicit invocation is disabled by design. Invoke the skill explicitly:
 $controlled-goal-driven
 ```
 
-## Usage
+## 🚀 Usage
 
 ```text
 $controlled-goal-driven
@@ -67,7 +67,7 @@ Success criteria:
 - stop if the same error repeats twice
 ```
 
-## When to use / When not to use
+## ✅❌ When to use / When not to use
 
 Use this skill when:
 
@@ -83,7 +83,7 @@ Do not use this skill when:
 - there is no validation command
 - the user only needs a simple one-shot answer
 
-## Why this version exists
+## 💡 Why this version exists
 
 This workflow is inspired by [Li Dang (@lidangzzz)](https://x.com/lidangzzz)'s [goal-driven](https://github.com/lidangzzz/goal-driven) pattern, but this project focuses more on safety, controllability, and auditable execution in Codex.
 
@@ -96,7 +96,7 @@ Compared with open-ended looping prompts, this skill adds:
 - concise final reporting
 - conservative defaults when user constraints are missing
 
-## Why not run forever?
+## ⏱️ Why not run forever?
 
 Long-running workflows only make sense if success can be validated.
 
@@ -119,7 +119,7 @@ Keep optimizing until it feels good.
 
 If the goal is vague, the skill should plan and stop rather than consume tokens indefinitely.
 
-## Recommended input format
+## 🧭 Recommended input format
 
 ```text
 Goal:
@@ -141,13 +141,13 @@ Stop conditions:
 When Codex should stop and report instead of continuing.
 ```
 
-## Examples
+## 📚 Examples
 
 - [Test-driven bug fix](./examples/test-driven-bugfix.md)
 - [Refactor with scope](./examples/refactor-with-scope.md)
 - [Generated test validation](./examples/generated-test-validation.md)
 
-## Final report should include
+## 📝 Final report should include
 
 - Goal
 - Changes made
@@ -155,7 +155,7 @@ When Codex should stop and report instead of continuing.
 - Remaining issues
 - Recommended next action
 
-## Acknowledgement
+## 🙏 Acknowledgement
 
 Inspired by Li Dang's original goal-driven workflow:
 

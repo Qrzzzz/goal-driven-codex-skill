@@ -10,13 +10,13 @@
 
 ---
 
-## 概览
+## 🌟 概览
 
 ![可控目标驱动 Codex Skill 概览图](./assets/overview-zh-CN.png)
 
 本仓库将可控的目标驱动工作流打包为一个小型 Codex Skill 项目。它适合用于进展可验证、迭代有意义、并且需要明确停止条件的任务。
 
-## 这是什么？
+## 🤔 这是什么？
 
 这个技能会把宽泛的工程请求转化为一个有边界的循环：
 
@@ -31,7 +31,7 @@
 
 > 不只是“更努力地试”，而是围绕明确目标推进、持续验证，并在不值得继续时及时停止。
 
-## 安装
+## 🛠️ 安装
 
 将 `skill/` 目录复制到 Codex skills 目录中，例如：
 
@@ -52,7 +52,7 @@
 $controlled-goal-driven
 ```
 
-## 使用方式
+## 🚀 使用方式
 
 ```text
 $controlled-goal-driven
@@ -67,7 +67,7 @@ Success criteria:
 - stop if the same error repeats twice
 ```
 
-## 何时使用 / 何时不使用
+## ✅❌ 何时使用 / 何时不使用
 
 适合使用这个技能的情况：
 
@@ -83,7 +83,7 @@ Success criteria:
 - 没有验证命令
 - 用户只需要一次性的简单回答
 
-## 为什么要做这个版本
+## 💡 为什么要做这个版本
 
 该工作流灵感来自 [Li Dang（@lidangzzz）](https://x.com/lidangzzz) 的 [goal-driven](https://github.com/lidangzzz/goal-driven) 模式，但本项目更强调在 Codex 中的安全性、可控性与可审计性。
 
@@ -96,7 +96,7 @@ Success criteria:
 - 简洁最终报告
 - 在缺少约束时使用保守默认值
 
-## 为什么不无限运行？
+## ⏱️ 为什么不无限运行？
 
 只有在成功可验证时，长流程才有意义。
 
@@ -119,7 +119,7 @@ go test ./...
 
 如果目标本身模糊，技能应当先产出计划并停止，而不是无限消耗 token。
 
-## 推荐输入模板
+## 🧭 推荐输入模板
 
 ```text
 Goal:
@@ -141,13 +141,13 @@ Stop conditions:
 何时应停止并报告，而不是继续尝试。
 ```
 
-## 示例
+## 📚 示例
 
 - [基于测试的 Bug 修复](./examples/test-driven-bugfix.md)
 - [带作用域的重构](./examples/refactor-with-scope.md)
 - [生成测试并验证](./examples/generated-test-validation.md)
 
-## 最终报告建议包含
+## 📝 最终报告建议包含
 
 - 目标
 - 已完成修改
@@ -155,7 +155,7 @@ Stop conditions:
 - 剩余问题
 - 下一步建议
 
-## 致谢
+## 🙏 致谢
 
 本项目灵感来自 Li Dang 的目标驱动工作流：
 
