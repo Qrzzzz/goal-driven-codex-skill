@@ -90,24 +90,31 @@ Success criteria:
 
 ## 🧩 Recommended input format
 
-```text
-Goal:
-The concrete thing Codex should accomplish.
+## Why this version exists
 
-Success criteria:
-How to know the task is complete.
+This workflow is inspired by [Li Dang (@lidangzzz)](https://x.com/lidangzzz)'s [goal-driven](https://github.com/lidangzzz/goal-driven) pattern, but this project focuses more on safety, controllability, and auditable execution in Codex.
 
-Validation:
-Commands Codex should run to verify progress.
+Compared with open-ended looping prompts, this skill adds:
 
-Scope:
-Files or directories Codex may edit.
+- explicit iteration budgets
+- mandatory validation commands
+- clear stop conditions
+- strict scope awareness
+- concise final reporting
+- conservative defaults when user constraints are missing
 
-Budget:
-Maximum number of iterations or attempts.
+## Why not run forever?
 
-Stop conditions:
-When Codex should stop and report instead of continuing.
+Long-running workflows only make sense if success can be validated.
+
+Good examples:
+
+```bash
+npm test
+pytest
+cargo test
+make test
+go test ./...
 ```
 
 ---
