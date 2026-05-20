@@ -31,7 +31,7 @@
 
 ## 🧭 为什么要做这个版本
 
-该工作流灵感来自 Li Dang 的目标驱动模式，但本项目更强调在 Codex 中的 **安全性与可审计性**。
+该工作流灵感来自 [立党（@lidangzzz）](https://x.com/lidangzzz) 的 [goal-driven](https://github.com/lidangzzz/goal-driven) 模式，但本项目更强调在 Codex 中的 **安全性、可控性与可审计性**。
 
 相较于无限循环式提示词，这个版本增加了：
 
