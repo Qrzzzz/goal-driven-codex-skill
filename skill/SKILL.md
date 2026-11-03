@@ -85,7 +85,7 @@ Keep records compact and factual. Example format (illustrative, not executed):
 
 ```text
 Iteration 2/3 | changed: src/parser/parse.ts
-Checks: parser tests FAIL (1 vs 4 baseline failures); related regressions PASS
+Checks: parser tests FAIL (1 vs 4 previous, 10 pre-edit failures); related regressions PASS
 Progress: PROGRESS | new regressions: 0 | next: fix remaining nested-expression case
 ```
 
