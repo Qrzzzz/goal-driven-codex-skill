@@ -31,6 +31,8 @@
 
 > 不只是“更努力地试”，而是围绕明确目标推进、持续验证，并在不值得继续时及时停止。
 
+v1.1 区分**单项检查结果**（PASS / FAIL / BLOCKED / NOT_RUN）、**每轮进展**（PROGRESS / NO_PROGRESS / REGRESSION / UNKNOWN）及**最终终止状态**（SUCCESS / NO_PROGRESS / REGRESSION / BLOCKED / BUDGET_EXHAUSTED / NEEDS_DECISION）。只要有可比较的客观进展，同一错误连续出现并不自动触发停止。
+
 ## 🛠️ 安装
 
 将 `skill/` 目录复制到 Codex skills 目录中，例如：
@@ -58,13 +60,24 @@ $controlled-goal-driven
 $controlled-goal-driven
 
 Goal:
-Fix the parser so all syntax tests pass.
+修复解析器的嵌套表达式问题。
 
 Success criteria:
-- npm test passes
-- no unrelated files modified
-- maximum 3 iterations
-- stop if the same error repeats twice
+- 解析器测试及新增回归测试通过
+- 不改变无关行为和文件
+
+Validation:
+- npm test -- parser
+
+Scope:
+- src/parser/**, tests/parser/**
+
+Budget:
+- 最多 3 轮修改与验证
+
+Stop conditions:
+- 连续两轮可比较的执行没有进展时停止
+- 验证受阻或必须扩大修改范围时停止
 ```
 
 ## ✅❌ 何时使用 / 何时不使用
@@ -72,7 +85,7 @@ Success criteria:
 适合使用这个技能的情况：
 
 - 任务有客观成功标准
-- 存在验证命令
+- 存在可执行检查或可独立核验的证据
 - 允许修改的作用域清晰
 - 多次迭代可以改善结果
 
@@ -80,7 +93,7 @@ Success criteria:
 
 - 目标很模糊
 - 成功只取决于审美或感觉
-- 没有验证命令
+- 没有可信的验证方法
 - 用户只需要一次性的简单回答
 
 ## 💡 为什么要做这个版本
@@ -90,7 +103,7 @@ Success criteria:
 相较于开放式循环提示词，这个技能增加了：
 
 - 显式迭代预算
-- 强制验证命令
+- 强制提供验证证据
 - 明确停止条件
 - 严格作用域意识
 - 简洁最终报告
@@ -146,14 +159,16 @@ Stop conditions:
 - [基于测试的 Bug 修复](./examples/test-driven-bugfix.md)
 - [带作用域的重构](./examples/refactor-with-scope.md)
 - [生成测试并验证](./examples/generated-test-validation.md)
+- [v1.1 决策场景与预期终止状态](./examples/decision-traces.md)
 
 ## 📝 最终报告建议包含
 
-- 目标
-- 已完成修改
-- 验证结果
-- 剩余问题
-- 下一步建议
+- 终止状态与原因
+- 目标、允许范围及修改内容
+- 修改前基线、最终证据及迭代次数
+- 各成功标准的已验证 / 未满足 / 未验证状态
+- 验证命令及 PASS / FAIL / BLOCKED / NOT_RUN 结果
+- 剩余问题和下一步建议
 
 ## 🙏 致谢
 
