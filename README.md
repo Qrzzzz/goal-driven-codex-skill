@@ -31,6 +31,8 @@ Core idea:
 
 > Do not just try harder. Work toward a clear goal, validate results, and stop when further attempts are not justified.
 
+v1.1 distinguishes **check results** (PASS / FAIL / BLOCKED / NOT_RUN), **iteration progress** (PROGRESS / NO_PROGRESS / REGRESSION / UNKNOWN), and **terminal states** (SUCCESS / NO_PROGRESS / REGRESSION / BLOCKED / BUDGET_EXHAUSTED / NEEDS_DECISION). Repeating one error does not automatically terminate work when comparable evidence shows progress.
+
 ## 🛠️ Installation
 
 Copy the `skill/` directory into your Codex skills folder. For example:
@@ -58,13 +60,24 @@ $controlled-goal-driven
 $controlled-goal-driven
 
 Goal:
-Fix the parser so all syntax tests pass.
+Fix the parser's nested-expression bug.
 
 Success criteria:
-- npm test passes
-- no unrelated files modified
-- maximum 3 iterations
-- stop if the same error repeats twice
+- parser tests pass, including a regression test
+- no unrelated behavior or files change
+
+Validation:
+- npm test -- parser
+
+Scope:
+- src/parser/**, tests/parser/**
+
+Budget:
+- maximum 3 edit-and-validate iterations
+
+Stop conditions:
+- stop after two comparable iterations without progress
+- stop if verification is blocked or scope must expand
 ```
 
 ## ✅❌ When to use / When not to use
@@ -72,7 +85,7 @@ Success criteria:
 Use this skill when:
 
 - the task has objective success criteria
-- validation commands exist
+- executable checks or independently inspectable evidence exist
 - the allowed editing scope is clear
 - repeated iterations can improve the result
 
@@ -80,7 +93,7 @@ Do not use this skill when:
 
 - the goal is vague
 - success is based only on taste or vibes
-- there is no validation command
+- there is no trustworthy validation method
 - the user only needs a simple one-shot answer
 
 ## 💡 Why this version exists
@@ -90,7 +103,7 @@ This workflow is inspired by [Li Dang (@lidangzzz)](https://x.com/lidangzzz)'s [
 Compared with open-ended looping prompts, this skill adds:
 
 - explicit iteration budgets
-- mandatory validation commands
+- mandatory validation evidence
 - clear stop conditions
 - strict scope awareness
 - concise final reporting
@@ -146,14 +159,16 @@ When Codex should stop and report instead of continuing.
 - [Test-driven bug fix](./examples/test-driven-bugfix.md)
 - [Refactor with scope](./examples/refactor-with-scope.md)
 - [Generated test validation](./examples/generated-test-validation.md)
+- [v1.1 decision traces and expected stop states](./examples/decision-traces.md)
 
 ## 📝 Final report should include
 
-- Goal
-- Changes made
-- Validation results
-- Remaining issues
-- Recommended next action
+- Terminal state and reason
+- Goal, permitted scope, and changes made
+- Baseline vs final evidence and iterations used
+- Per-criterion verified / not met / unverified status
+- Validation commands and PASS / FAIL / BLOCKED / NOT_RUN results
+- Remaining issues and recommended next action
 
 ## 🙏 Acknowledgement
 
