@@ -83,11 +83,11 @@ If evidence is UNKNOWN, attempt only bounded diagnosis; then classify the result
 
 Keep records compact and factual. Example format (illustrative, not executed):
 
-\`\`\`text
+```text
 Iteration 2/3 | changed: src/parser/parse.ts
 Checks: parser tests FAIL (1 vs 4 baseline failures); related regressions PASS
 Progress: PROGRESS | new regressions: 0 | next: fix remaining nested-expression case
-\`\`\`
+```
 
 Summarize noisy logs rather than pasting them. Always identify the next hypothesis before another edit.
 
