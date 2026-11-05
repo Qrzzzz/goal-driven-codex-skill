@@ -46,6 +46,8 @@ The final structure should be:
 ```text
 ~/.agents/skills/controlled-goal-driven/SKILL.md
 ~/.agents/skills/controlled-goal-driven/agents/openai.yaml
+~/.agents/skills/controlled-goal-driven/references/
+~/.agents/skills/controlled-goal-driven/scripts/check_scope.py
 ```
 
 Implicit invocation is disabled by design. Invoke the skill explicitly:
@@ -79,6 +81,32 @@ Stop conditions:
 - stop after two comparable iterations without progress
 - stop if verification is blocked or scope must expand
 ```
+
+## 🔎 v1.2 Verification and Scope Guard
+
+The core Skill uses short instructions with [on-demand references](./skill/references/). v1.2 adds a **baseline-aware, optional Git scope checker**; a missing checker never overrides an explicit scope limit.
+
+Before editing a Git repository:
+
+```bash
+python skill/scripts/check_scope.py snapshot
+```
+
+After an edit, check all agent-introduced paths:
+
+```bash
+python skill/scripts/check_scope.py check --allow 'src/parser/**' --allow 'tests/parser/**'
+```
+
+The checker treats unchanged user-owned dirty files as pre-existing, recognizes staged, unstaged, untracked, deleted and renamed paths, and does not revert files. The tool is advisory, not a sandbox. See [scope checker reference](./skill/references/scope-check.md) and [baseline/regression guidance](./skill/references/baseline-and-validation.md).
+
+Run offline deterministic checks (no API key):
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Codex behavior is **not** automatically evaluated by these tests. The [behavioral evaluation guide](./docs/evaluation.md) describes ten manual/opt-in scenarios and how to collect evidence.
 
 ## ✅❌ When to use / When not to use
 
@@ -160,6 +188,7 @@ When Codex should stop and report instead of continuing.
 - [Refactor with scope](./examples/refactor-with-scope.md)
 - [Generated test validation](./examples/generated-test-validation.md)
 - [v1.1 decision traces and expected stop states](./examples/decision-traces.md)
+- [v1.2 test and evaluation protocol](./docs/evaluation.md)
 
 ## 📝 Final report should include
 
