@@ -46,6 +46,8 @@ v1.1 区分**单项检查结果**（PASS / FAIL / BLOCKED / NOT_RUN）、**每�
 ```text
 ~/.agents/skills/controlled-goal-driven/SKILL.md
 ~/.agents/skills/controlled-goal-driven/agents/openai.yaml
+~/.agents/skills/controlled-goal-driven/references/
+~/.agents/skills/controlled-goal-driven/scripts/check_scope.py
 ```
 
 该技能有意禁用隐式调用。请显式调用：
@@ -79,6 +81,32 @@ Stop conditions:
 - 连续两轮可比较的执行没有进展时停止
 - 验证受阻或必须扩大修改范围时停止
 ```
+
+## 🔎 v1.2 验证与修改范围检查
+
+新版核心指令采用精简结构，详细规则存放在[按需加载的参考文件](./skill/references/)中。新增可选的 **Git Scope 检查器**，可识别修改前已有的用户变更；即使无法运行检查器，也必须遵守用户指定的修改范围。
+
+在 Git 项目内、开始修改前执行：
+
+```bash
+python skill/scripts/check_scope.py snapshot
+```
+
+每轮修改后检查：
+
+```bash
+python skill/scripts/check_scope.py check --allow 'src/parser/**' --allow 'tests/parser/**'
+```
+
+检查器覆盖已暂存、未暂存、未跟踪、删除和重命名的路径，不会自动回滚文件。它属于辅助核查工具，并非安全沙箱。参见 [Scope 检查说明](./skill/references/scope-check.md) 与 [基线及回归验证](./skill/references/baseline-and-validation.md)。
+
+无需 API 密钥即可运行离线测试：
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+**这些离线测试不会验证 Codex 的真实行为。** 另有[行为评测指南](./docs/evaluation.md)，包含十个需要手动或选择性运行的评测场景。
 
 ## ✅❌ 何时使用 / 何时不使用
 
@@ -160,6 +188,7 @@ Stop conditions:
 - [带作用域的重构](./examples/refactor-with-scope.md)
 - [生成测试并验证](./examples/generated-test-validation.md)
 - [v1.1 决策场景与预期终止状态](./examples/decision-traces.md)
+- [v1.2 测试与行为评测流程](./docs/evaluation.md)
 
 ## 📝 最终报告建议包含
 

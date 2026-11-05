@@ -5,101 +5,32 @@ description: Use this skill only when the user explicitly requests a controlled,
 
 # Controlled Goal-Driven Workflow
 
-Use only when explicitly invoked for a complex coding or verification task. Work toward agreed, objectively verifiable criteria within a bounded editing scope and iteration budget. Do not treat effort, a passing subset of tests, or a model's confidence as proof of success.
+Invoke **explicitly** for complex coding or verification tasks with objective success criteria. Do not run open-ended loops, broaden scope, or claim completion based solely on model confidence or a subset of green tests.
 
-## Preflight: establish a contract
+## Required contract and baseline
 
-Before editing, identify or conservatively infer:
+Before edits, establish: (1) goal and individually verifiable success criteria, including non-test criteria; (2) allowed paths and user-owned existing changes; (3) executable checks or independently inspectable evidence; (4) finite edit-and-validate budget (default **3 iterations**); (5) stop conditions and decisions reserved for the user. Infer only safe, obvious defaults. If an essential decision is unclear, stop as **NEEDS_DECISION**; if necessary access or verification is unavailable, stop as **BLOCKED**.
 
-1. **Goal** and individually checkable **success criteria**, including non-test requirements.
-2. **Allowed paths** and prohibited changes; preserve existing user modifications.
-3. **Validation commands / evidence** appropriate to each criterion.
-4. **Iteration budget** (default: at most **3 edit-and-validate iterations**).
-5. **Stop conditions**, dependencies, and decisions requiring user authority.
+Inspect the working tree **before** edits. Record the current HEAD, staged/unstaged/untracked user changes, relevant checks and their baseline outcomes, and which requirements are already met. Never reset, overwrite, or discard user changes. For more detailed baseline and regression methods, read [baseline-and-validation.md](references/baseline-and-validation.md) when results or environment are nontrivial.
 
-Make only obvious, safe inferences. If a product decision or essential verification definition is missing, produce a plan and stop as **NEEDS_DECISION**. If necessary tools, credentials, files, external services, or scope are unavailable, stop as **BLOCKED**. Never invent a validation result. If no meaningful executable or independently inspectable validation can be established, do not enter the edit loop.
+## Bounded execution
 
-Inspect the repository and record a **pre-edit baseline**: working-tree status, relevant existing tests/checks, acceptance criteria already satisfied, known failures, and any unavailable checks. Run nondestructive baseline checks when feasible; if comparability is unavailable, state that limitation. Do not reset, overwrite, or discard user changes.
+1. Summarize the goal, success criteria, scope, budget, and verification plan.
+2. Capture pre-edit evidence. If no trustworthy way to validate exists, plan and stop instead of editing.
+3. Make one smallest justified edit batch inside scope. Every edit-plus-verification round counts toward the finite budget, including test-only edits.
+4. Validate focused behavior (L1) and relevant regressions (L2); use build/integration/performance checks (L3) when necessary for the goal. Record each check as **PASS**, **FAIL**, **BLOCKED**, or **NOT_RUN**, with command or evidence source and observed result. BLOCKED/NOT_RUN never imply PASS.
+5. Compare only trustworthy, comparable evidence against baseline and the previous round. Classify each iteration **PROGRESS**, **NO_PROGRESS**, **REGRESSION**, or **UNKNOWN**; record any new failure and a concrete next hypothesis. Do not count weakened/deleted tests or narrower criteria as improvement.
+6. Stop immediately on verified completion, essential user decisions, unsafe regression, unavoidable blockers, two consecutive comparable NO_PROGRESS rounds, or budget exhaustion. A repeated individual error alone is **not** a stop condition. UNKNOWN permits at most one justified diagnostic before stopping if evidence stays unreliable.
+7. Report the terminal state and evidence, without inventing results or exceeding the budget.
 
-## Validation evidence
+Terminal states: **SUCCESS**, **NO_PROGRESS**, **REGRESSION**, **BLOCKED**, **BUDGET_EXHAUSTED**, **NEEDS_DECISION**. SUCCESS requires positive evidence for **every** required criterion and no unresolved unacceptable regression. A fixable regression may receive a bounded repair; do not continue after an unsafe one. See [stop-and-progress.md](references/stop-and-progress.md) when choosing between terminal states or evaluating ambiguous progress.
 
-Track each required check separately using one of these statuses:
+## Optional Git scope guard
 
-- **PASS** — ran successfully and the observed outcome meets that check's requirement.
-- **FAIL** — ran and the requirement was not met (including an assertion or a measurable target failure).
-- **BLOCKED** — could not obtain a valid result (missing tool/dependency, unavailable credential, timeout, or inaccessible service).
-- **NOT_RUN** — not attempted; include the reason.
-
-For every check, record the command or evidence source, observed result (exit code, test summary, measurement, or inspected artifact), and limitations. A nonzero command exit is not automatically a product-code failure; classify tool/environment problems as BLOCKED. A flaky check remains inconclusive until a bounded, justified rerun yields trustworthy evidence. Do not silently turn BLOCKED or NOT_RUN into PASS.
-
-Choose verification depth according to risk:
-
-- **L1:** focused tests, syntax/type checks, or the smallest relevant measurement.
-- **L2:** related regression tests and contractual/API behavior.
-- **L3:** full suite, build, integration, or performance verification when the goal or risk requires it.
-
-Use L1 for iteration feedback and L2/L3 as appropriate before claiming completion. Do not run an expensive full suite in every round without justification. Passing selected tests does **not** establish SUCCESS if another required criterion (e.g. public API stability, security, performance) is unverified. Record each acceptance criterion as **verified**, **not met**, or **unverified**, with supporting check IDs/evidence.
-
-## Progress relative to the baseline
-
-Compare evidence against the pre-edit baseline and the last **comparable** iteration. Record fixed requirements, remaining failures, newly introduced regressions, and any change to the test environment. Weight user-defined requirements and severity above raw pass counts.
-
-Classify the outcome of each edit-and-validate iteration:
-
-- **PROGRESS:** a relevant unmet criterion is demonstrably closer to passing (e.g. comparable required failures drop from 10 to 4 to 1), with no unacceptable new regression.
-- **NO_PROGRESS:** comparable evidence shows no meaningful improvement toward any outstanding required criterion.
-- **REGRESSION:** a new material failure, behavior break, or unacceptable degradation is attributable to the edits.
-- **UNKNOWN:** the environment, tests, or measurements changed enough to make comparison unreliable, or evidence is inconclusive.
-
-Repetition of one failing assertion is **not** by itself a stopping condition. Two consecutive comparable NO_PROGRESS iterations terminate as **NO_PROGRESS**. UNKNOWN is **not** progress and does not clear a previous no-progress streak; at most one bounded diagnostic/rerun may restore comparability. If trustworthy verification cannot be restored, stop as BLOCKED. Treat regressions as higher priority than superficial pass-count improvements.
-
-Do **not** gain apparent progress by deleting/weakening required tests, relaxing success criteria, suppressing failures, or narrowing validation. Legitimate test changes are allowed only when justified by the goal and checked against independent or existing evidence; explain changed baselines explicitly.
-
-## Bounded loop
-
-1. Restate the goal, criteria, permitted paths, budget, and validation plan concisely.
-2. Inspect the repository and capture the baseline before modifying files.
-3. Make the smallest justified change within scope. One batch of edits followed by validation counts as **one iteration**, including test-only edits. Diagnostics without edits do not reset the counter.
-4. Run focused validation; record per-check statuses and a progress classification. Run broader relevant verification before declaring success.
-5. Apply the decision rules below. Continue only when a specific next hypothesis is justified, verification is available, and budget remains; do not keep trying solely to consume the budget.
-6. Finish with the evidence-based final report.
-
-**Hard limit:** maximum 3 iterations by default, or the user's explicitly specified smaller/larger finite limit. Never exceed it, and never run indefinite diagnostic retries. A prior failure can be fixed within the remaining budget; the same error reappearing is not an automatic stop.
-
-## Terminal decision rules
-
-Use exactly one final terminal state, with a short reason and evidence. Evaluate after validation and whenever blocked. If multiple conditions hold, prefer the more informative root cause in this order:
-
-1. **REGRESSION** — stop immediately for a dangerous/unacceptable new regression; for a fixable regression, one bounded repair is permissible if safe and budget remains. If it is still unresolved at the end, report REGRESSION.
-2. **NEEDS_DECISION** — an essential user-owned product, scope, or acceptance decision is unresolved. Do not guess or expand scope.
-3. **BLOCKED** — required verification, dependency, permission, or allowed editing scope prevents responsible continuation. Do not mislabel a blocked check as a code failure.
-4. **SUCCESS** — **every** required criterion has positive evidence and there are no unresolved unacceptable regressions. Stop immediately; do not use remaining iterations.
-5. **NO_PROGRESS** — two consecutive comparable iterations showed NO_PROGRESS and no supported next step justifies continuing.
-6. **BUDGET_EXHAUSTED** — the finite iteration cap was reached without verified success or a more specific terminal cause.
-
-If evidence is UNKNOWN, attempt only bounded diagnosis; then classify the resulting blocker or unmet goal without claiming success. At each stop, say what is proven, what remains unverified, and what would unblock the next step.
-
-## Iteration record
-
-Keep records compact and factual. Example format (illustrative, not executed):
-
-```text
-Iteration 2/3 | changed: src/parser/parse.ts
-Checks: parser tests FAIL (1 vs 4 previous, 10 pre-edit failures); related regressions PASS
-Progress: PROGRESS | new regressions: 0 | next: fix remaining nested-expression case
-```
-
-Summarize noisy logs rather than pasting them. Always identify the next hypothesis before another edit.
+For Git repositories with explicit path allowlists, optionally use the stdlib-only [check_scope.py](scripts/check_scope.py) script: run `snapshot` before any edits, then `check --allow 'src/module/**'` after edits. It compares the current state against fingerprints of pre-existing user changes, including staged, unstaged, untracked, renamed and deleted paths; both sides of renames count. See [scope-check.md](references/scope-check.md) **only when adopting the checker**. A scope violation blocks further out-of-scope writes; report it without automatically reverting anything. This checker is advisory, not a security sandbox; inability to run it does not authorize ignoring the user's scope restriction.
 
 ## Final report
 
-Include:
+State: terminal state and reason; goal, scope and edits; baseline versus final evidence and iterations used; each acceptance criterion **verified / not met / unverified**; each validation command or observation **PASS / FAIL / BLOCKED / NOT_RUN**; regressions, blockers, remaining issues, and recommended next action. Clearly distinguish observations from inferences.
 
-- **Terminal state and reason** (one of the six states above).
-- **Goal, allowed scope, and changes made**, including unexpected or pre-existing changes.
-- **Baseline vs final evidence** and iteration count.
-- **Success criteria:** verified / not met / unverified, with evidence.
-- **Validation:** commands or sources, PASS / FAIL / BLOCKED / NOT_RUN, and limitations.
-- **Remaining failures, regressions, blockers, and next action.**
-
-Do not claim full success when only a subset of required checks passed. Never overwrite unrelated files, change user constraints, invent observations, create unbounded subagents, or broaden the task without explicit authorization.
+Do not create unbounded subagents, run indefinite retries, modify unrelated files, or broaden requirements without authorization. Preserve `agents/openai.yaml`'s explicit-invocation policy.
