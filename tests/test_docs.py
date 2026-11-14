@@ -9,6 +9,15 @@ SKILL = ROOT / "skill" / "SKILL.md"
 
 
 class DocumentationChecks(unittest.TestCase):
+    def test_readme_versions_match_packaged_skill(self):
+        version = (ROOT / "skill/VERSION").read_text(encoding="utf-8").strip()
+        for filename in ("README.md", "README.zh-CN.md"):
+            content = (ROOT / filename).read_text(encoding="utf-8")
+            self.assertIn(f"**{version}**", content, filename)
+            documented_checks = re.findall(r"--expected-version ([0-9]+\.[0-9]+\.[0-9]+)", content)
+            self.assertTrue(documented_checks, filename)
+            self.assertEqual(set(documented_checks), {version}, filename)
+
     def test_skill_frontmatter_and_explicit_invocation(self):
         skill = SKILL.read_text(encoding="utf-8")
         self.assertTrue(skill.startswith("---\nname: controlled-goal-driven\n"))

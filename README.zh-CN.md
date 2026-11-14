@@ -4,7 +4,7 @@
 
 **一个面向复杂工程任务、强调边界与验证的 Codex 实用技能。**
 
-当前版本：**1.3.0**。参见[更新记录](./CHANGELOG.md)。
+当前版本：**1.4.0**。参见[更新记录](./CHANGELOG.md)。
 
 [English README](./README.md) · [灵感来源](https://github.com/lidangzzz/goal-driven)
 
@@ -37,19 +37,39 @@ v1.1 区分**单项检查结果**（PASS / FAIL / BLOCKED / NOT_RUN）、**每�
 
 ## 🛠️ 安装
 
-将 `skill/` 目录复制到 Codex skills 目录中，例如：
+使用源码时，在仓库根目录执行以下命令。目标目录必须尚不存在；已有安装请先按下文的更新步骤操作。
 
-```text
-~/.agents/skills/controlled-goal-driven/
+Windows PowerShell：
+
+```powershell
+$skillDir = Join-Path $env:USERPROFILE '.agents\skills\controlled-goal-driven'
+if (Test-Path -LiteralPath $skillDir) { throw '已有安装：请先备份并检查本地修改，再更新。' }
+New-Item -ItemType Directory -Force -Path (Split-Path -Parent $skillDir) | Out-Null
+Copy-Item -LiteralPath .\skill -Destination $skillDir -Recurse
+python "$skillDir\scripts\check_install.py" --expected-version 1.4.0
 ```
 
-最终结构应为：
+macOS / Linux（Bash）：
+
+```bash
+skill_dir="$HOME/.agents/skills/controlled-goal-driven"
+if [ -e "$skill_dir" ] || [ -L "$skill_dir" ]; then
+  printf '%s\n' '已有安装：请先备份并检查本地修改，再更新。' >&2
+else
+  mkdir -p "$HOME/.agents/skills" && cp -R skill "$skill_dir" &&
+    python3 "$skill_dir/scripts/check_install.py" --expected-version 1.4.0
+fi
+```
+
+也可从[发布页面](https://github.com/Qrzzzz/goal-driven-codex-skill/releases/latest)下载安装 ZIP，使用配套 `.sha256` 文件核对后，将其中的 `controlled-goal-driven/` 文件夹解压到 skills 目录。不要多套一层目录，也不要覆盖现有安装。最终结构应为：
 
 ```text
 ~/.agents/skills/controlled-goal-driven/SKILL.md
+~/.agents/skills/controlled-goal-driven/VERSION
 ~/.agents/skills/controlled-goal-driven/agents/openai.yaml
 ~/.agents/skills/controlled-goal-driven/references/
 ~/.agents/skills/controlled-goal-driven/scripts/check_scope.py
+~/.agents/skills/controlled-goal-driven/scripts/check_install.py
 ```
 
 该技能有意禁用隐式调用。请显式调用：
@@ -57,6 +77,23 @@ v1.1 区分**单项检查结果**（PASS / FAIL / BLOCKED / NOT_RUN）、**每�
 ```text
 $controlled-goal-driven
 ```
+
+检查脚本使用 Python 3.11+，无需第三方包或付费服务。可以从**任意目录**运行，默认检查脚本所在的安装目录，核对版本、Skill 声明名称、随包提供的显式调用策略和递归本地引用。它只读文件，发现安装不完整或版本不符时返回非零退出码；它不是通用 YAML 校验器，也不能证明 Codex 已发现该技能。没有 Python 时，可手动检查 `VERSION`、`SKILL.md` 和 `agents/openai.yaml` 中的 `policy.allow_implicit_invocation: false`，然后在 Codex 中显式调用。
+
+如果 Codex 找不到技能，请确认 `SKILL.md` 直接位于 `controlled-goal-driven/` 下，使用当前 Codex 配置的 skills 目录，并在安装后新建聊天。最后用一个边界清楚的小任务显式调用，以确认发现和加载正常；离线脚本无法代替这一步。
+
+### 更新、回滚和卸载
+
+更新前先读取已安装的 `VERSION`，并比较**整个安装目录**与准备使用的源码／发行包。本地定制必须经过检查后有意保留；直接覆盖可能丢失修改，也可能留下过时文件。
+
+1. 下载或检出目标版本，在独立目录运行 `check_install.py --expected-version 1.4.0` 检查；未来发行时替换为对应版本号。
+2. 将当前安装整体移动到 **skills 目录以外、尚不存在的新备份位置**，保留所有文件。只保留一份同名已安装 Skill；扫描目录内的备份可能造成重复发现。
+3. 按上面的命令安装到已腾空的目标位置。有意迁移经过检查的定制内容，再运行检查脚本，并在 Codex 中显式调用小任务。确认之前保留备份。
+4. 回滚时，将新安装移动到 skills 目录外的另一个备份位置，再将原文件夹恢复到原路径，并按原版本校验。不要合并目录或重置无关文件。
+
+可逆卸载方式：只将 `controlled-goal-driven/` 文件夹移动到 skills 目录之外，然后新建聊天；确认不再需要后，再删除该确切备份。另行批准的私有路径中的检查点独立存在，如需清除，应单独检查和处理。
+
+维护者打标签或发布前，请使用[发布验证清单](./docs/releasing.md)。
 
 ## 🚀 使用方式
 

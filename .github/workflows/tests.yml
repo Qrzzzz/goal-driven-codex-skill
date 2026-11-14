@@ -17,3 +17,5 @@ jobs:
           python-version: '3.11'
       - name: Run offline scope and contract tests
         run: python -m unittest discover -s tests -v
+      - name: Verify source installation
+        run: python skill/scripts/check_install.py

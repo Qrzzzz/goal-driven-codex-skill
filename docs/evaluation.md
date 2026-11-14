@@ -14,6 +14,8 @@ This verifies the Python Git-scope checker in temporary repositories (including 
 
 v1.3 also checks the synthetic checkpoint example's ledger and evidence structure. It does not provide an automatic persistence/resumption engine or prove that agents enforce the written protocol. New scenarios cover independent budget dimensions, deterministic versus transient failures, unknown telemetry, compatible continuation and stale/corrupt state. Inspect those decisions through opt-in model runs below.
 
+v1.4 exercises the installed-package smoke checker on copied, incomplete, stale and misconfigured folders. Check your source/package directly with `python skill/scripts/check_install.py --expected-version 1.4.0`. These checks do not establish live Codex discovery; explicitly invoke the installed Skill with a bounded task to verify that separately. See the [release checklist](releasing.md).
+
 ## 2. Model-dependent behavioral evaluations (manual / opt-in)
 
 The scenarios in [`tests/fixtures/behavior_scenarios.json`](../tests/fixtures/behavior_scenarios.json) specify a human-readable prompt, expected action, expected terminal state (or `null` when the agent should continue), required supporting evidence, and an explicit prohibition on claiming success in certain cases.
