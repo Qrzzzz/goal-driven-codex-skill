@@ -4,6 +4,8 @@
 
 **一个面向复杂工程任务、强调边界与验证的 Codex 实用技能。**
 
+当前版本：**1.3.0**。参见[更新记录](./CHANGELOG.md)。
+
 [English README](./README.md) · [灵感来源](https://github.com/lidangzzz/goal-driven)
 
 </div>
@@ -106,7 +108,20 @@ python skill/scripts/check_scope.py check --allow 'src/parser/**' --allow 'tests
 python -m unittest discover -s tests -v
 ```
 
-**这些离线测试不会验证 Codex 的真实行为。** 另有[行为评测指南](./docs/evaluation.md)，包含十个需要手动或选择性运行的评测场景。
+**这些离线测试不会验证 Codex 的真实行为。** 另有[行为评测指南](./docs/evaluation.md)，包含需要手动或选择性运行的评测场景。
+
+## 🧮 v1.3 资源预算与显式恢复
+
+默认仍为 **3 轮实现迭代**，**额外验证重试为 0 次**。可选设置整个任务的诊断重试次数、累计执行时间、单条命令超时，以及能够可靠观测的用量上限。重试必须有具体的瞬时故障假设；确定性错误需要修改实现。预算耗尽时报告具体维度，无法观测的 token 或费用保持未知。参见[资源预算说明](./skill/references/resource-budgets.md)。
+
+检查点存储是可选项，必须明确启用并指定用户认可的位置。后续显式恢复时，核对目标、范围、仓库、分支、HEAD 及脏文件指纹，并在剩余预算内重新验证。契约发生变化时需要用户决策；已消耗的迭代与重试不会归零。[会话状态协议](./skill/references/session-state.md)及[虚构 JSON 示例](./skill/references/session-state.example.json)说明如何手动保存证据记录，不会启动后台执行，也不保存凭据。
+
+在普通 Goal/Scope/Validation 字段之外，可选增加：
+
+```text
+Budget: 最多 3 轮实现；整个任务最多 1 次诊断重试；累计执行 600 秒；单条命令 60 秒。
+State: 明确启用检查点存储，位置为 <已认可的私有路径>。
+```
 
 ## ✅❌ 何时使用 / 何时不使用
 

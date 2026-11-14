@@ -3,6 +3,7 @@
 import importlib.util
 import io
 import json
+import os
 from contextlib import redirect_stdout, redirect_stderr
 from pathlib import Path
 import subprocess
@@ -121,10 +122,15 @@ class ScopeCheckerTests(unittest.TestCase):
 
     def test_unusual_filename(self):
         self.take()
-        self.write("odd/new\nname.txt", "new\n")
+        name = "odd/new name-中文.txt" if os.name == "nt" else "odd/new\nname.txt"
+        self.write(name, "new\n")
         code, output, _ = self.check("src/api/**")
         self.assertEqual(code, 2)
-        self.assertIn("new\\nname.txt", output)
+        self.assertIn(repr(name), output)
+
+    def test_nul_path_parser_preserves_newlines(self):
+        self.assertEqual(module.nul_paths(b"odd/new\nname.txt\0other.txt\0"),
+                         {"odd/new\nname.txt", "other.txt"})
 
     def test_snapshot_repo_mismatch(self):
         self.take()

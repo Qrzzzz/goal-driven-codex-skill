@@ -15,10 +15,10 @@ Use exactly one state; explain other unresolved conditions in the report. After 
 
 1. **REGRESSION**: unsafe or unresolved new material regression after any permitted repair.
 2. **NEEDS_DECISION**: essential product, scope, or acceptance judgment belongs to the user.
-3. **BLOCKED**: tools, permissions, trusted validation, resources, or allowed editing scope prevent responsible continuation.
+3. **BLOCKED**: tools, permissions, trusted validation, unavailable prerequisites, or allowed editing scope prevent responsible continuation. A consumed agreed resource allowance is classified as BUDGET_EXHAUSTED below.
 4. **SUCCESS**: every required criterion independently verified; no unacceptable unresolved regression. Stop immediately even if budget remains.
 5. **NO_PROGRESS**: two comparable consecutive NO_PROGRESS rounds with no evidence-backed next step.
-6. **BUDGET_EXHAUSTED**: finite edit-iteration limit reached with unmet requirements and no more specific cause.
+6. **BUDGET_EXHAUSTED**: any agreed finite iteration, retry, time or observable usage limit prevents required work, with unmet requirements and no higher-priority cause. Report the exhausted dimension and observed usage. A diagnostic retry cap preventing trustworthy revalidation takes this state rather than the generic BLOCKED classification. See [resource-budgets.md](resource-budgets.md) when additional dimensions apply.
 
 Do not keep trying just to exhaust the allowed rounds. Count a batch of edits followed by validation as one iteration (including test-only edits); diagnostics without edits do not reset the budget. Do not exceed the user's finite cap. When several states fit, report the most specific underlying stop reason rather than an invented success.
 

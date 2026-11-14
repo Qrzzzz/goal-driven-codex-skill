@@ -1,4 +1,4 @@
-# v1.2 Verification and Behavioral Evaluation
+# Verification and Behavioral Evaluation
 
 This project has two distinct evidence levels. **Do not describe the fixture tests as proving Codex behavior.**
 
@@ -11,6 +11,8 @@ python -m unittest discover -s tests -v
 ```
 
 This verifies the Python Git-scope checker in temporary repositories (including staged/unstaged/untracked changes, renames, deletions, user-owned dirty files, prefix collisions, and traversal inputs), parses the behavior-fixture expectations, and checks required Skill references. GitHub Actions runs exactly this command on push and pull requests. Tests never run Codex and need no paid service or credentials.
+
+v1.3 also checks the synthetic checkpoint example's ledger and evidence structure. It does not provide an automatic persistence/resumption engine or prove that agents enforce the written protocol. New scenarios cover independent budget dimensions, deterministic versus transient failures, unknown telemetry, compatible continuation and stale/corrupt state. Inspect those decisions through opt-in model runs below.
 
 ## 2. Model-dependent behavioral evaluations (manual / opt-in)
 

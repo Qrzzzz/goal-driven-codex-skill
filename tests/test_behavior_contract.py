@@ -28,7 +28,7 @@ class BehaviorContractTests(unittest.TestCase):
                 self.assertNotEqual(item["expected_terminal"], "SUCCESS")
 
     def test_required_negative_cases_exist(self):
-        items = {item["id"]: item for item in json.loads(FIXTURE.read_text())}
+        items = {item["id"]: item for item in json.loads(FIXTURE.read_text(encoding="utf-8"))}
         for name in (
             "immediate_success", "repeated_error_with_progress", "two_no_progress_rounds",
             "unavailable_test_runner", "out_of_scope_change", "budget_exhausted_with_progress",

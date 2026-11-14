@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "goal": "Repair nested-expression parsing",
+  "success_criteria": [
+    {"id": "parser", "description": "Nested-expression regression and related parser tests pass"}
+  ],
+  "allowed_paths": ["src/parser/**", "tests/parser/**"],
+  "repository": {
+    "worktree_root": "/example/project",
+    "branch": "fix/parser",
+    "head": "1111111111111111111111111111111111111111",
+    "dirty_fingerprints": {
+      "src/parser/core.py": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  "baseline": {
+    "head": "1111111111111111111111111111111111111111",
+    "reference": "/example/private-task-data/pre-edit-baseline.json",
+    "criteria": [{"id": "parser", "status": "FAIL", "summary": "10 required assertions failed"}]
+  },
+  "budget": {
+    "limits": {"iterations": 3, "validation_retries": 1, "active_seconds": 600, "tool_calls": null, "model_tokens": null, "cost_usd": null},
+    "consumed": {"iterations": 1, "validation_retries": 0, "active_seconds": 45, "tool_calls": null, "model_tokens": null, "cost_usd": null},
+    "remaining": {"iterations": 2, "validation_retries": 1, "active_seconds": 555, "tool_calls": null, "model_tokens": null, "cost_usd": null},
+    "command_timeout_seconds": 60
+  },
+  "attempts": [
+    {
+      "kind": "implementation",
+      "iteration": 1,
+      "checks": [{"criterion_id": "parser", "status": "FAIL", "evidence": "parser regression suite: 4 required assertions still failing"}],
+      "progress": "PROGRESS",
+      "next_hypothesis": "Check nested operator precedence"
+    }
+  ],
+  "stop_reason": {"state": "NEEDS_DECISION", "cause": "User requested a session handoff before further edits"},
+  "next_hypothesis": "Check nested operator precedence after explicit resume and fresh validation"
+}

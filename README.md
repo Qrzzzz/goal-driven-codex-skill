@@ -4,6 +4,8 @@
 
 **A practical, bounded, validation-first Codex skill for complex engineering tasks.**
 
+Current version: **1.3.0**. See the [changelog](./CHANGELOG.md).
+
 [Chinese README](./README.zh-CN.md) · [Original Inspiration](https://github.com/lidangzzz/goal-driven)
 
 </div>
@@ -106,7 +108,20 @@ Run offline deterministic checks (no API key):
 python -m unittest discover -s tests -v
 ```
 
-Codex behavior is **not** automatically evaluated by these tests. The [behavioral evaluation guide](./docs/evaluation.md) describes ten manual/opt-in scenarios and how to collect evidence.
+Codex behavior is **not** automatically evaluated by these tests. The [behavioral evaluation guide](./docs/evaluation.md) describes manual/opt-in scenarios and how to collect evidence.
+
+## 🧮 v1.3 Budgets and Explicit Resumption
+
+The default remains **3 implementation iterations**, with **zero extra validation retries**. Optionally set task-wide diagnostic retries, active elapsed time, per-command timeouts, or reliably observable usage limits. A retry needs a concrete transient-failure hypothesis; deterministic errors need a repair. Exhaustion reports the dimension, and unavailable token/cost telemetry stays unknown. See [resource budgets](./skill/references/resource-budgets.md).
+
+Checkpoint storage is optional and requires an explicitly approved location. On a later explicit resume, compare the goal, scope, repository, branch, HEAD and dirty fingerprints, then run fresh validation within the remaining budget. Changed contracts need a decision; consumed iterations and retries never reset. The [session-state protocol](./skill/references/session-state.md) and [synthetic JSON example](./skill/references/session-state.example.json) describe manual evidence records, without background execution or credential storage.
+
+Optional input, in addition to the ordinary Goal/Scope/Validation fields:
+
+```text
+Budget: 3 iterations; 1 diagnostic retry total; 600 active seconds; 60 seconds per command.
+State: explicitly enable checkpoint storage at <approved private path>.
+```
 
 ## ✅❌ When to use / When not to use
 
